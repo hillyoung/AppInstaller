@@ -37,7 +37,8 @@
             var blob = new Blob([text]);
             // eleLink.href = URL.createObjectURL(blob);
             // alert(URL.createObjectURL(blob))
-            element.setAttribute('href', "itms-services://?action=download-manifest&url=" + URL.createObjectURL(blob));
+            element.setAttribute('href', "itms-services://?action=download-manifest&url=./test.plist");
+            // element.setAttribute('href', "itms-services://?action=download-manifest&url=" + URL.createObjectURL(blob));
             // element.setAttribute('href', "https://raw.githubusercontent.com/hillyoung/AppInstaller/master/test.plist");
             // element.setAttribute('href', "itms-services://?action=download-manifest&url=https://raw.githubusercontent.com/hillyoung/AppInstaller/master/test.plist");
             // element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
