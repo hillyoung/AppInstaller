@@ -25,6 +25,11 @@
 
         function didLaunch() {
             // alert("didLaunch")
+
+            // $.ajax({url:"https://cloud.bmob.cn/0e9cb02dad66722a/getPlist?name=hhgs",success:function(result){
+            //     // $("#myDiv").html(result)
+            //     alert(result)
+            // }});
             $("#down_load").click(function() {
                 // alert("安装app")
                 // window.open()
@@ -37,7 +42,7 @@
             var blob = new Blob([text]);
             // eleLink.href = URL.createObjectURL(blob);
             // alert(URL.createObjectURL(blob))
-            element.setAttribute('href', "itms-services://?action=download-manifest&url=./test.plist");
+            element.setAttribute('href', "itms-services://?action=download-manifest&url=https://cloud.bmob.cn/0e9cb02dad66722a/getPlist?name=hhgs");
             // element.setAttribute('href', "itms-services://?action=download-manifest&url=" + URL.createObjectURL(blob));
             // element.setAttribute('href', "https://raw.githubusercontent.com/hillyoung/AppInstaller/master/test.plist");
             // element.setAttribute('href', "itms-services://?action=download-manifest&url=https://raw.githubusercontent.com/hillyoung/AppInstaller/master/test.plist");
