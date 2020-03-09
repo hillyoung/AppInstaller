@@ -16,14 +16,14 @@
             </array>
             <key>metadata</key>
             <dict>
-		        <key>net.luculent.liems.hhgs</key>
-                <string>请填上你的开发者证书用户名</string>
+                <key>bundle-identifier</key>
+		        <string>net.luculent.liems.hhgs</string>
                 <key>bundle-version</key>
-                <string>版本</string>
+                <string>1.0.1</string>
                 <key>kind</key>
                 <string>software</string>
                 <key>title</key>
-                <string>请填上标题</string>
+                <string>测试安装</string>
             </dict>
         </dict>
     </array>
