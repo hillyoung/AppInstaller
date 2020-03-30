@@ -8,10 +8,16 @@
     
     <link rel="stylesheet" href="https://static.pgyer.com/static-20200109/assets/build/header_include.min.css">
     <script type="text/javascript" src="./js/jquery-3.4.1.js"></script>
+    <!-- <script type="text/javascript" src="./js/Bmob-2.2.2.min.js"></script> -->
+    <!-- <script type="text/javascript" src="./js/lib/app.js"></script> -->
+    <script type="text/javascript" src="./js/app-info-parser.js"></script>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script>
  
+
+        var appname = ''
+
         function getQueryVariable(variable)
         {
             var query = window.location.search.substring(1);
@@ -25,7 +31,8 @@
 
         function didLaunch() {
             // alert("didLaunch")
-
+            appname = getQueryVariable('appname')
+            // alert(appname)
             // $.ajax({url:"https://cloud.bmob.cn/0e9cb02dad66722a/getPlist?name=hhgs",success:function(result){
             //     // $("#myDiv").html(result)
             //     alert(result)
@@ -33,7 +40,9 @@
             $("#down_load").click(function() {
                 // alert("安装app")
                 // window.open()
-                download("text.plist", '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"><plist version="1.0"><dict><key>items</key><array><dict><key>assets</key><array><dict><key>kind</key><string>software-package</string><key>url</key><string>https://raw.githubusercontent.com/hillyoung/AppInstaller/master/app/hhgs/LiemsMobileEnterprise.ipa</string></dict></array><key>metadata</key><dict><key>bundle-identifier</key>		<string>net.luculent.liems.hhgs</string><key>bundle-version</key><string>1.0.1</string><key>kind</key><string>software</string><key>title</key><string>测试安装</string></dict></dict></array></dict></plist>')
+                var url = './app/' + appname + '/LiemsMobileEnterprise.ipa'
+                parseIpaInfo(url)
+                // download("text.plist", '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"><plist version="1.0"><dict><key>items</key><array><dict><key>assets</key><array><dict><key>kind</key><string>software-package</string><key>url</key><string>https://raw.githubusercontent.com/hillyoung/AppInstaller/master/app/hhgs/LiemsMobileEnterprise.ipa</string></dict></array><key>metadata</key><dict><key>bundle-identifier</key>		<string>net.luculent.liems.hhgs</string><key>bundle-version</key><string>1.0.1</string><key>kind</key><string>software</string><key>title</key><string>测试安装</string></dict></dict></array></dict></plist>')
             })
         }
 
@@ -42,7 +51,7 @@
             var blob = new Blob([text]);
             // eleLink.href = URL.createObjectURL(blob);
             // alert(URL.createObjectURL(blob))
-            element.setAttribute('href', "itms-services://?action=download-manifest&url=https://cloud.bmob.cn/0e9cb02dad66722a/getPlist?name=hhgs");
+            element.setAttribute('href', "itms-services://?action=download-manifest&url=https://hillyoung.github.io/TestPlist/testinstall.plist");
             // element.setAttribute('href', "itms-services://?action=download-manifest&url=" + URL.createObjectURL(blob));
             // element.setAttribute('href', "https://raw.githubusercontent.com/hillyoung/AppInstaller/master/test.plist");
             // element.setAttribute('href', "itms-services://?action=download-manifest&url=https://raw.githubusercontent.com/hillyoung/AppInstaller/master/test.plist");
@@ -57,6 +66,55 @@
             document.body.removeChild(element);
         }
 
+        function parseIpaInfo(url) {
+            // url = 'http://192.168.0.3:5000/testAPI'
+            // $.ajax({
+            //     type:'GET',
+            //     url:url,
+            //     // dataType:"blob",
+            //     beforeSend:function (xhr) {
+            //         console.log('设置')
+            //       xhr.responseType = 'blob'  
+            //     },
+            //     success:function (data) {
+            //         console.log(typeof(data))
+            //         const parser = new AppInfoParser(data)
+            //         parser.parse().then(result => {
+            //             console.log('app info ----> ', result)
+            //             console.log('icon base64 ----> ', result.icon)
+            //         }).catch(err => {
+            //             console.log('err ----> ', err)
+            //         })
+            //     },
+            //     error:function (xhr, textStatus, errorThrown) {
+            //         console.log(errorThrown)
+            //     }
+            // })
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);    // 也可以使用POST方式，根据接口
+            xhr.responseType = "blob";  // 返回类型blob
+            // 定义请求完成的处理函数，请求前也可以增加加载框/禁用下载按钮逻辑
+            xhr.onload = function () {
+                // 请求完成
+                if (this.status === 200) {
+                    // 返回200
+                    var blob = this.response;
+                    var file = new File([blob], 'LiemsMobileEnterprise.ipa', {type: 'application/vnd.iphone', lastModified: Date.now()});
+
+                    console.log(typeof(blob))
+                    const parser = new AppInfoParser(file)
+                    parser.parse().then(result => {
+                        console.log('app info ----> ', result)
+                        console.log('icon base64 ----> ', result.icon)
+                    }).catch(err => {
+                        console.log('err ----> ', err)
+                    })
+                }
+            };
+            // 发送ajax请求
+            xhr.send()
+        }
 
     </script>
     <!-- <link rel="stylesheet" href="https://static.pgyer.com/static-20200109/assets/build/appView.min.css">
@@ -65,7 +123,8 @@
     <body style="" onload="didLaunch()">
     
     <!-- wechat share icon -->
-    
+    <input type="file" id="profilePhotoFileUpload"  multiple="multiple" >
+
     
     <div class="row-fluid  margin-bottom-20" style="z-index:-2;">
         <div id="header"></div>
@@ -239,9 +298,7 @@
     </script>
     <!-- <script src="https://static.pgyer.com/static-20200109/assets/js/adAdsense.js"></script> -->
     <script type="text/javascript"> (function (w) { w.frontjsConfig = {token: 'c68f352d79ca00ed4b38afe12d899f6a', behaviour: 15, origin: ['pgyer.com', 'google-analytics.com', 'bdstatic.com', 'google.com', 'googlesyndication.com', 'baidu.com', 'meiqia.com', 'qiniup.com', 'googletagmanager.com'], exclude: ['meiqia.com', 'baidu.com']} })(window); </script> 
-    
-    <script type="text/javascript" src="https://static.frontjs.com/dist/current/tracker.min.js" crossorigin="true"></script>
-    
+        
     <script>
     // 处理页面数据太少，页面底部留白的问题, 手机显示不处理
     // $(function() {
@@ -271,6 +328,30 @@
     // var mobileRegCN = /^1[3-9][0-9]{9}$/;
     // var mobileRegEN = /[\d\-\s]+/;
     // const TENCENT_CAPTCHA_ERROR_CODE = [100];
+    const fileUploadControl = document.getElementById('profilePhotoFileUpload');
+    fileUploadControl.onchange = () => {
+        const pic = fileUploadControl.files
+        var file = Bmob.File("1234.png", pic);
+        // // for(let item of pic){
+        //     file = Bmob.File(item.name, item]);
+        // }
+        file.up
+        file.save().then(res => {
+            console.log(res.length);
+            console.log(res);
+        })
+    }
+    // let params = {
+    //     username: 'bmob2018',
+    //     password: 'bmob2018',
+    //     email: 'bmob2018@bmob.cn',
+    //     phone: '13711166567',
+    // }
+    // Bmob.User.register(params).then(res => {
+    // console.log(res)
+    // }).catch(err => {
+    // console.log(err)
+    // });
     </script>
     <script>
     // const TENCENT_CAPTCHA_APP_ID = '2097264343';
